@@ -5,6 +5,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func pobierzListeZadanZTrello() (listaZadan ListaZadan, err error) {
@@ -33,11 +35,37 @@ func odczytajListeZadan(trelloApiResponseByte []byte) (listaZadan ListaZadan, er
 	if err != nil {
 		return
 	}
+	zadania = dodajDateUtworzeniaDoZadan(zadania)
 	liczbaZadan := len(zadania)
 
 	listaZadan = ListaZadan{
 		LiczbaZadan: liczbaZadan,
 		Zadania:     zadania,
 	}
+	return
+}
+
+func dodajDateUtworzeniaDoZadan(zadania []Zadanie) (zadaniaZData []Zadanie) {
+	for _, zadanie := range zadania {
+		zadanieZData := obliczDateUtworzeniaUlotki(zadanie)
+		zadaniaZData = append(zadaniaZData, zadanieZData)
+	}
+	return
+}
+func obliczDateUtworzeniaUlotki(zadanie Zadanie) (zadaniaZData Zadanie) {
+	id := zadanie.ID
+	hexTimestamp := id[0:8]
+
+	sec, err := strconv.ParseInt(hexTimestamp, 16, 64)
+	if err != nil {
+		panic(err)
+	}
+	creationDateTimeStamp := time.Unix(sec, 0)
+	creationDate := creationDateTimeStamp.Format(time.RFC3339)
+	terminZakonczenia := creationDateTimeStamp.AddDate(0, 0, 2).Format(time.RFC3339)
+
+	zadanie.DataUtworzenia = creationDate
+	zadanie.TerminZakonczenia = terminZakonczenia
+	zadaniaZData = zadanie
 	return
 }

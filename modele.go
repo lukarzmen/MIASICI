@@ -1,9 +1,11 @@
 package main
 
 type Zadanie struct {
-	ID          string `json:"id"`
-	Nazwa       string `json:"name"`
-	SkroconyURL string `json:"shortUrl"`
+	ID                string `json:"id"`
+	Nazwa             string `json:"name"`
+	SkroconyURL       string `json:"shortUrl"`
+	DataUtworzenia    string `json:"data_utworzenia"`
+	TerminZakonczenia string `json:"termin_zakonczenia"`
 }
 
 //jak wziąć datę utworzenia zadania
