@@ -2,6 +2,7 @@ language: go
 go: 
  - release
  - tip
-
+install: 
+- go get -t ./...
 script:
 - go test -v ./...
