@@ -1,8 +1,10 @@
 language: go
-go: 
- - release
- - tip
+go:
+  - 1.x
+  - 1.6
+  - 1.7.x
+  - master
 install: 
-- go get -t ./...
+  - go get -t ./...
 script:
-- go test -v ./...
+  - go test -v ./...
