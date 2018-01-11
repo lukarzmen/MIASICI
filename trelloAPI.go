@@ -55,7 +55,7 @@ func przetworzZadaniaDoListy(zadania []Zadanie) (listaZadan ListaZadan) {
 
 	listaZadan = ListaZadan{
 		LiczbaZadan:            liczbaZadan,
-		Zadania:                zadania,
+		Zadania:                zadaniaZData,
 		CzyWystepujaOpoznienia: czyOpoznienie,
 	}
 	return
