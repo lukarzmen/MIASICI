@@ -35,24 +35,32 @@ func odczytajListeZadan(trelloApiResponseByte []byte) (listaZadan ListaZadan, er
 	if err != nil {
 		return
 	}
-	zadania = dodajDateUtworzeniaDoZadan(zadania)
+
+	listaZadan = przetworzZadaniaDoListy(zadania)
+	return
+}
+
+func przetworzZadaniaDoListy(zadania []Zadanie) (listaZadan ListaZadan) {
+	var zadaniaZData []Zadanie
+	czyOpoznienie := false
+	for _, zadanie := range zadania {
+		zadanieZData, czyOpoznienieZadania := obliczDateUtworzeniaUlotki(zadanie)
+		zadaniaZData = append(zadaniaZData, zadanieZData)
+		if czyOpoznienieZadania {
+			czyOpoznienie = true
+		}
+	}
+
 	liczbaZadan := len(zadania)
 
 	listaZadan = ListaZadan{
-		LiczbaZadan: liczbaZadan,
-		Zadania:     zadania,
+		LiczbaZadan:            liczbaZadan,
+		Zadania:                zadania,
+		CzyWystepujaOpoznienia: czyOpoznienie,
 	}
 	return
 }
-
-func dodajDateUtworzeniaDoZadan(zadania []Zadanie) (zadaniaZData []Zadanie) {
-	for _, zadanie := range zadania {
-		zadanieZData := obliczDateUtworzeniaUlotki(zadanie)
-		zadaniaZData = append(zadaniaZData, zadanieZData)
-	}
-	return
-}
-func obliczDateUtworzeniaUlotki(zadanie Zadanie) (zadaniaZData Zadanie) {
+func obliczDateUtworzeniaUlotki(zadanie Zadanie) (zadaniaZData Zadanie, czyOpoznienie bool) {
 	id := zadanie.ID
 	hexTimestamp := id[0:8]
 
@@ -62,10 +70,12 @@ func obliczDateUtworzeniaUlotki(zadanie Zadanie) (zadaniaZData Zadanie) {
 	}
 	creationDateTimeStamp := time.Unix(sec, 0)
 	creationDate := creationDateTimeStamp.Format(time.RFC3339)
-	terminZakonczenia := creationDateTimeStamp.AddDate(0, 0, 2).Format(time.RFC3339)
+	dedlineDate := creationDateTimeStamp.AddDate(0, 0, 2)
+	czyOpoznienie = dedlineDate.Before(time.Now())
 
+	terminZakonczeniaString := dedlineDate.Format(time.RFC3339)
 	zadanie.DataUtworzenia = creationDate
-	zadanie.TerminZakonczenia = terminZakonczenia
+	zadanie.TerminZakonczenia = terminZakonczeniaString
 	zadaniaZData = zadanie
 	return
 }

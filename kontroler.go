@@ -15,6 +15,9 @@ func pobierzListeZadan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if listaZadan.CzyWystepujaOpoznienia {
+		fmt.Println("Wystepuja opoznienia!")
+	}
 	fmt.Println("Liczba zadan: ", listaZadan.LiczbaZadan)
 
 	listaZadanByte, err := json.Marshal(listaZadan)

@@ -15,4 +15,5 @@ type Zadanie struct {
 type ListaZadan struct {
 	Zadania     []Zadanie `json:"tasks,omitempty"`
 	LiczbaZadan int       `json:"tasks_count"`
+	CzyWystepujaOpoznienia bool `json:"delay_exists"`
 }
