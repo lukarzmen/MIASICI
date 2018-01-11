@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -26,6 +28,7 @@ func pobierzListeZadanZTrello() (listaZadan ListaZadan, err error) {
 	if err != nil {
 		return
 	}
+	go zatwierdzOdczytanieListyZdan()
 	return
 }
 
@@ -77,5 +80,31 @@ func obliczDateUtworzeniaUlotki(zadanie Zadanie) (zadaniaZData Zadanie, czyOpozn
 	zadanie.DataUtworzenia = creationDate
 	zadanie.TerminZakonczenia = terminZakonczeniaString
 	zadaniaZData = zadanie
+	return
+}
+
+func zatwierdzOdczytanieListyZdan() (err error) {
+	completeTaskAction := ActivitiTask{
+		Action:    "complete",
+		Variables: []string{},
+	}
+	completeTaskActionJSON, err := json.Marshal(&completeTaskAction)
+
+	client := &http.Client{}
+
+	/* Authenticate */
+	request, err := http.NewRequest(http.MethodPost, "http://80.211.255.185:32771/activiti-rest/service/runtime/tasks/23", bytes.NewBuffer(completeTaskActionJSON))
+	request.SetBasicAuth("kermit", "kermit")
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := client.Do(request)
+	defer response.Body.Close()
+	if response.StatusCode != 200 {
+		err = errors.New("Nie można zatwierdzić zadania odczytania listy zadan w Activiti")
+	}
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	return
 }

@@ -13,7 +13,12 @@ type Zadanie struct {
 //new Date(1000*parseInt(idBoard.substring(0,8),16));
 
 type ListaZadan struct {
-	Zadania     []Zadanie `json:"tasks,omitempty"`
-	LiczbaZadan int       `json:"tasks_count"`
-	CzyWystepujaOpoznienia bool `json:"delay_exists"`
+	Zadania                []Zadanie `json:"tasks,omitempty"`
+	LiczbaZadan            int       `json:"tasks_count"`
+	CzyWystepujaOpoznienia bool      `json:"delay_exists"`
+}
+
+type ActivitiTask struct {
+	Action    string   `json:"action"`
+	Variables []string `json:"variables"`
 }
