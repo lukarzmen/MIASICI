@@ -22,3 +22,10 @@ type ActivitiTask struct {
 	Action    string   `json:"action"`
 	Variables []string `json:"variables"`
 }
+
+type Build struct {
+	Failed    bool
+	Branch    string
+	StartTime string
+	Author    string
+}
