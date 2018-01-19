@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func pobierzInformacjeOBuildachZCircleCI() (listaBuildow []Build, err error) {
+func pobierzInformacjeOBuildachZCircleCI() (listaBuildow ListaBuildow, err error) {
 	circleCIResponse, err := http.Get("https://circleci.com/api/v1.1/project/github/lukarzmen/miasi-serwis?circle-token=b8f2bc36d1fbefb2bc1f043c157c49cc0c334fb2")
 
 	if circleCIResponse.StatusCode != http.StatusOK {
@@ -25,6 +25,6 @@ func pobierzInformacjeOBuildachZCircleCI() (listaBuildow []Build, err error) {
 		return
 	}
 
-	//todo zapostuj do activiti
+	go zatwierdzOdczytanieListyZdan(24)
 	return
 }

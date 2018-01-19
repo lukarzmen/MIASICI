@@ -28,7 +28,7 @@ func pobierzListeZadanZTrello() (listaZadan ListaZadan, err error) {
 	if err != nil {
 		return
 	}
-	go zatwierdzOdczytanieListyZdan()
+	go zatwierdzOdczytanieListyZdan(23)
 	return
 }
 
@@ -83,7 +83,7 @@ func obliczDateUtworzeniaUlotki(zadanie Zadanie) (zadaniaZData Zadanie, czyOpozn
 	return
 }
 
-func zatwierdzOdczytanieListyZdan() (err error) {
+func zatwierdzOdczytanieListyZdan(taskID int) (err error) {
 	completeTaskAction := ActivitiTask{
 		Action:    "complete",
 		Variables: []string{},
@@ -93,7 +93,8 @@ func zatwierdzOdczytanieListyZdan() (err error) {
 	client := &http.Client{}
 
 	/* Authenticate */
-	request, err := http.NewRequest(http.MethodPost, "http://80.211.255.185:32771/activiti-rest/service/runtime/tasks/23", bytes.NewBuffer(completeTaskActionJSON))
+	taksIDString := strconv.Itoa(taskID)
+	request, err := http.NewRequest(http.MethodPost, "http://80.211.255.185:32771/activiti-rest/service/runtime/tasks/"+taksIDString, bytes.NewBuffer(completeTaskActionJSON))
 	request.SetBasicAuth("kermit", "kermit")
 	request.Header.Set("Content-Type", "application/json")
 

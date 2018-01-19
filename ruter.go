@@ -19,6 +19,10 @@ var trasy []Trasa = []Trasa{
 		Sciezka: "/lista-zadan",
 		Akcja:   pobierzListeZadan,
 	},
+	Trasa{
+		Sciezka: "/lista-buildow",
+		Akcja:   pobierzBuildy,
+	},
 }
 
 type Trasa struct {

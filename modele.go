@@ -24,8 +24,13 @@ type ActivitiTask struct {
 }
 
 type Build struct {
-	Failed    bool
-	Branch    string
-	StartTime string
-	Author    string
+	Failed    *bool  `json:"failed"`
+	Branch    string `json:"branch"`
+	StartTime string `json:"start_time"`
+	Username  string `json:"username"`
+	Reponame  string `json:"reponame"`
+}
+
+type ListaBuildow struct {
+	ListaBuildow []Build
 }
